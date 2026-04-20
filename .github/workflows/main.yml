@@ -26,7 +26,7 @@ jobs:
       run: |
         # --noconsole: GUI 프로그램이므로 검은 창이 뜨지 않게 설정
         # --onefile: 하나의 exe 파일로 합침
-        pyinstaller --noconsole --onefile main.py
+        pyinstaller --noconsole --onefile valet reserve loop.py
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
