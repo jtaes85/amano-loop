@@ -1,22 +1,35 @@
-name: Build EXE on Windows
-on: [push] # 코드를 올릴 때마다 자동 빌드
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ "main" ] # 본인의 브랜치명에 맞게 수정 (보통 main 또는 master)
 
 jobs:
   build:
-    runs-on: windows-latest # 윈도우 환경 빌드 서버 대여
+    runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Python 설정
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10' # 사용 중인 버전으로 수정 가능
-      - name: 패키지 설치 및 빌드
-        run: |
-          pip install pyinstaller
-          # 필요한 라이브러리가 있다면 여기에 추가 (예: pip install selenium)
-          pyinstaller --onefile main.py
-      - name: 결과물 업로드
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-exe
-          path: dist/*.exe
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller requests
+        # 만약 나중에 다른 라이브러리를 추가하면 여기에 적어주세요.
+
+    - name: Build with PyInstaller
+      run: |
+        # --noconsole: GUI 프로그램이므로 검은 창이 뜨지 않게 설정
+        # --onefile: 하나의 exe 파일로 합침
+        pyinstaller --noconsole --onefile main.py
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ValetApp-Windows-EXE
+        path: dist/*.exe
